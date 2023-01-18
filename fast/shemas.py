@@ -1,6 +1,6 @@
 from pydantic import BaseModel, validator
 
-from .types import TaskState
+from .types import TaskId, TaskState
 
 
 class NewTask(BaseModel):
@@ -21,3 +21,7 @@ class Task(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ModifiedTask(BaseModel):
+    id: TaskId

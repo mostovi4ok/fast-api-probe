@@ -1,11 +1,14 @@
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.orm import sessionmaker
+
+from . import env
 
 
-async_engine = create_async_engine(os.environ["FAST_DB_ASYNC"])
+async_engine = create_async_engine(env.FAST_DB_ASYNC)
 
-engine = create_engine(os.environ["FAST_DB"])
+AsyncSessionFactory = async_sessionmaker(async_engine, expire_on_commit=False)
 
-async_session = async_sessionmaker(async_engine, expire_on_commit=False)
+engine = create_engine(env.FAST_DB)
+
+SessionFactory = sessionmaker(engine)
