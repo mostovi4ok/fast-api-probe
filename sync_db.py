@@ -2,8 +2,7 @@ from typing import Literal
 
 import click
 
-from fast.models import Base
-from fast.db import engine
+from fast.db_shema import create_all, drop_all
 
 
 @click.command()
@@ -16,9 +15,9 @@ def main(db_action: Literal["create", "drop"]) -> None:
     """Program for creating or deleting a database."""
 
     if db_action == "create":
-        Base.metadata.create_all(engine)
+        create_all()
     elif db_action == "drop":
-        Base.metadata.drop_all(engine)
+        drop_all()
 
 
 if __name__ == "__main__":

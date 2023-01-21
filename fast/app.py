@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 
-from .db import async_engine
 from .api import tasks_api
-
+from .db import async_engine
 
 app = FastAPI()
 app.mount("/", tasks_api)

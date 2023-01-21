@@ -1,6 +1,5 @@
-from typing import NewType
 from enum import Enum
-
+from typing import NewType
 
 TaskId = NewType("TaskId", int)
 

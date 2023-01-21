@@ -1,14 +1,12 @@
 from collections.abc import Sequence
 
-from fastapi import FastAPI, Request
+from fastapi import BackgroundTasks, FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from .errors import TaskError
-from . import shemas
-from . import crud
+from . import crud, shemas
 from .db import AsyncSessionFactory
+from .errors import TaskError
 from .models import Task
-
 
 tasks_api = FastAPI()
 
@@ -30,10 +28,12 @@ async def get_all_open_tasks() -> Sequence[Task]:
 @tasks_api.put("/tasks/", response_model=shemas.Task)
 async def create_task(task_params: shemas.NewTask) -> Task:
     async with AsyncSessionFactory() as session:
-        return await crud.create_task(session, task_params)
+        async with session.begin():
+            return await crud.create_task(session, task_params)
 
 
 @tasks_api.post("/tasks/", response_model=shemas.Task)
-async def modify_task_state(task_id_param: shemas.ModifiedTask) -> Task:
+async def modify_task_state(task_id_param: shemas.ModifiedTask, background_tasks: BackgroundTasks) -> Task:
     async with AsyncSessionFactory() as session:
-        return await crud.modify_task_state(session, task_id_param.id)
+        async with session.begin():
+            return await crud.modify_task_state(session, task_id_param.id, background_tasks)

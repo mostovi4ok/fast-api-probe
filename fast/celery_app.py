@@ -1,10 +1,10 @@
 from celery import Celery
 from sqlalchemy import select
 
-from .types import TaskId, TaskState
-from .models import Task
 from . import env
 from .db import SessionFactory
+from .models import Task
+from .types import TaskId, TaskState
 
 app = Celery("tasks", broker=env.CELERY_BROKER)
 
